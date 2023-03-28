@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function AuthForm({ buttonText, name, title, onSubmit, ...props }) {
+function AuthForm({ formName, buttonText, name, title, onSubmit, ...props }) {
   return (
     <section className="authpage">
       <h2 className="popup__title popup__title_auth">{title}</h2>
@@ -18,12 +18,14 @@ function AuthForm({ buttonText, name, title, onSubmit, ...props }) {
           {buttonText}
         </button>
       </form>
-      <p className="authpage__text">
-        Уже зарегистрированы?{' '}
-        <Link className="authpage__link" to="/sign-in">
-          Войти
-        </Link>
-      </p>
+      {formName === 'register' && (
+        <p className="authpage__text">
+          Уже зарегистрированы?
+          <Link className="authpage__link" to="/sign-in">
+            Войти
+          </Link>
+        </p>
+      )}
     </section>
   );
 }

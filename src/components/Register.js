@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import * as auth from './auth';
 import AuthForm from './AuthForm';
 
-function Register() {
+function Register({ onRegister }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -11,11 +10,17 @@ function Register() {
     e.target.name === 'Email' ? setEmail(value) : setPassword(value);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onRegister({ password, email });
+  };
+
   return (
     <AuthForm
-      className="register__form"
+      formName="register"
       title="Регистрация"
       buttonText="Зарегистрироваться"
+      onSubmit={handleSubmit}
     >
       <div className="popup__input-wrapper">
         <input

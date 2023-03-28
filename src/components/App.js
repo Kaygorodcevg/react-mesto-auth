@@ -1,6 +1,6 @@
 // import React from 'react';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import '../App.css';
 import Header from './Header';
 import Main from './Main';
@@ -13,9 +13,9 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ConfirmPopup from './ConfirmPopup';
 import Register from './Register';
-import ProtectedRoute from './ProtectedRoute';
-import AuthForm from './AuthForm';
 import Login from './Login';
+import * as auth from './auth';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
@@ -28,6 +28,11 @@ function App() {
   const [cards, setCards] = React.useState([]);
   const [deleteCard, setDeleteCard] = React.useState({});
 
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     Promise.all([Api.getInitialCards(), Api.getUserInfo()])
       .then(([cardsData, userData]) => {
@@ -38,8 +43,6 @@ function App() {
         console.log(err);
       });
   }, []);
-
-  const [loggedIn, setLoggedIn] = useState(false);
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((item) => item._id === currentUser._id);
@@ -119,37 +122,74 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  function handleRegistration(password, email) {
+    auth.register(password, email).then((res) => {
+      setEmail(res.data.email);
+      navigate('/sign-in', { replace: true });
+    });
+  }
+
+  function handleAutorization(password, email) {
+    auth
+      .authorize(password, email)
+      .then((data) => {
+        localStorage.setItem('token', data.token);
+        setEmail(email);
+        setLoggedIn(true);
+        navigate('/', { replace: true });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
+
+  function tokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.getContent(jwt).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          navigate('/', { replace: true });
+        }
+      });
+    }
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header loggedIn={loggedIn} />
         <Routes>
           <Route
+            path="/sign-up"
+            element={<Register onRegister={handleRegistration} />}
+          ></Route>
+          <Route
             path="/sign-in"
-            element={
-              <AuthForm name={'login'} title="Вход" buttonText="Войти" />
-            }
+            element={<Login onAuth={handleAutorization} />}
           ></Route>
           <Route
             path="/"
             element={
-              <>
-                <ProtectedRoute
-                  loggedIn={loggedIn}
-                  element={<Main />}
-                  onEditAvatar={handleEditAvatarClick}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onCardClick={onCardClick}
-                  handleCardLike={handleCardLike}
-                  handleCardDelete={handleDeleteClick}
-                  cards={cards}
-                />
-              </>
+              <ProtectedRoute
+                element={Main}
+                loggedIn={loggedIn}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={onCardClick}
+                handleCardLike={handleCardLike}
+                handleCardDelete={handleDeleteClick}
+                cards={cards}
+              />
             }
           />
+          <Route element={<Footer />}></Route>
         </Routes>
-        <Footer />
+
         <EditProfilePopup
           onUpdateUser={handleUpdateUser}
           isOpen={isEditProfilePopupOpen}
