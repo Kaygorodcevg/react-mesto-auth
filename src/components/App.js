@@ -16,6 +16,9 @@ import Register from './Register';
 import Login from './Login';
 import * as auth from './auth';
 import ProtectedRoute from './ProtectedRoute';
+import InfoTooltip from './InfoTooltip';
+import success from '../images/success.svg';
+import fail from '../images/fail.svg';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
@@ -30,7 +33,8 @@ function App() {
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
-
+  const [infoTooltip, setInfoTooltip] = useState(false);
+  const [message, setMessage] = useState({ img: '', text: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,6 +97,7 @@ function App() {
     setEditAvatarPopupOpen(false);
     setConfirmPopupOpen(false);
     setSelectedCard({});
+    setInfoTooltip(false);
   }
 
   function handleUpdateUser(userData) {
@@ -123,10 +128,24 @@ function App() {
   }
 
   function handleRegistration(password, email) {
-    auth.register(password, email).then((res) => {
-      setEmail(res.data.email);
-      navigate('/sign-in', { replace: true });
-    });
+    auth
+      .register(password, email)
+      .then((res) => {
+        setEmail(res.data.email);
+        setMessage({
+          img: success,
+          text: 'Вы успешно зарегистрировались!',
+        });
+        setInfoTooltip(true);
+        navigate('/sign-in', { replace: true });
+      })
+      .catch(() =>
+        setMessage({
+          img: fail,
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+        })
+      );
+    setInfoTooltip(true);
   }
 
   function handleAutorization(password, email) {
@@ -161,11 +180,16 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header loggedIn={loggedIn} />
+        <Header loggedIn={loggedIn} email={email} />
         <Routes>
           <Route
             path="/sign-up"
-            element={<Register onRegister={handleRegistration} />}
+            element={
+              <Register
+                onRegister={handleRegistration}
+                infoTooltip={infoTooltip}
+              />
+            }
           ></Route>
           <Route
             path="/sign-in"
@@ -189,6 +213,14 @@ function App() {
           />
           <Route element={<Footer />}></Route>
         </Routes>
+
+        <InfoTooltip
+          name="infoTooltip"
+          isOpen={infoTooltip}
+          onClose={closeAllPopups}
+          title={message.text}
+          img={message.img}
+        />
 
         <EditProfilePopup
           onUpdateUser={handleUpdateUser}
