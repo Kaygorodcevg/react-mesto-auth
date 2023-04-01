@@ -2,7 +2,7 @@
 
 ## Проект на Реакте с авторизацией и регистрацией
 
-[Ссылка на проект](https://kaygorodcevg.github.io/mesto-react/)
+[Ссылка на проект](https://kaygorodcevg.github.io/react-mesto-auth/)
 
 ### Основной функционал
 
@@ -16,14 +16,15 @@
 
 ### Технологии
 
-HTML
-CSS
-Flexbox
-Grid-layout
-Адаптивная верстка
-Методология БЭМ
-JavaScript (стандарт ES6)
-React (Create React App, портирование разметки в JSX, функциональные компоненты + хуки)
+- HTML
+- CSS
+- Flexbox
+- Grid-layout
+- Адаптивная верстка
+- Методология БЭМ
+- JavaScript (стандарт ES6)
+- React
+- Create React App
 
 ### Планы по доработке проекта
 
