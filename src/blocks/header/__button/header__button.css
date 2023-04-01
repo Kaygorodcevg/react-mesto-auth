@@ -1,4 +1,4 @@
-.header__buttom {
+.header__button {
   text-decoration: none;
   font-family: 'Inter';
   font-style: normal;
@@ -10,10 +10,11 @@
 
 .header__buttom:hover {
   opacity: 0.6;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
-  .header__buttom {
+  .header__button {
     font-size: 14px;
     line-height: 17px;
     padding: 34px 30px 33px 0px;

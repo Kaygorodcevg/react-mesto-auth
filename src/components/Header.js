@@ -1,8 +1,7 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import headerLogo from '../images/logo.svg';
 
-function Header({ loggedIn, email, signOut }) {
+function Header({ loggedIn, email, logout }) {
   const location = useLocation();
 
   return (
@@ -15,10 +14,10 @@ function Header({ loggedIn, email, signOut }) {
               <p className="header__email">{email}</p>
               <Link
                 to="sign-up"
-                className={`header__buttom ${
-                  loggedIn && 'header__buttom_active'
+                className={`header__button ${
+                  loggedIn && 'header__button_active'
                 }`}
-                onClick={signOut}
+                onClick={logout}
               >
                 Выйти
               </Link>
@@ -26,11 +25,11 @@ function Header({ loggedIn, email, signOut }) {
           ) : (
             <>
               {location.pathname === '/sign-up' ? (
-                <Link to="/sign-in" className="header__buttom">
+                <Link to="/sign-in" className="header__button">
                   Войти
                 </Link>
               ) : (
-                <Link to="/sign-up" className="header__buttom">
+                <Link to="/sign-up" className="header__button">
                   Регистрация
                 </Link>
               )}

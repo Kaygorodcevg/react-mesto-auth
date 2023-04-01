@@ -13,7 +13,7 @@ import AddPlacePopup from './AddPlacePopup';
 import ConfirmPopup from './ConfirmPopup';
 import Register from './Register';
 import Login from './Login';
-import * as auth from './auth';
+import * as auth from '../utils/auth';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import success from '../images/success.svg';
@@ -184,7 +184,7 @@ function App() {
     }
   }
 
-  function signOut() {
+  function logout() {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
     setEmail('');
@@ -193,7 +193,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header loggedIn={loggedIn} email={email} signOut={signOut} />
+        <Header loggedIn={loggedIn} email={email} logout={logout} />
         <Routes>
           <Route
             path="/sign-up"
