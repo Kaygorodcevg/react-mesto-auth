@@ -1,5 +1,4 @@
-// import React from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import '../App.css';
 import Header from './Header';
@@ -127,42 +126,50 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  function handleRegistration(password, email) {
-    auth
-      .register(password, email)
-      .then((res) => {
-        setEmail(res.data.email);
-        setMessage({
-          img: success,
-          text: 'Вы успешно зарегистрировались!',
-        });
-        setInfoTooltip(true);
-        navigate('/sign-in', { replace: true });
-      })
-      .catch(() =>
+  const handleRegistration = useCallback(
+    async (password, email) => {
+      try {
+        const data = await auth.register(password, email);
+        if (data) {
+          setEmail(data.email);
+          setMessage({
+            img: success,
+            text: 'Вы успешно зарегистрировались!',
+          });
+          setInfoTooltip(true);
+          navigate('/sign-in', { replace: true });
+        }
+      } catch (err) {
         setMessage({
           img: fail,
           text: 'Что-то пошло не так! Попробуйте ещё раз.',
-        })
-      );
-    setInfoTooltip(true);
-  }
+        });
+        setInfoTooltip(true);
+      }
+    },
+    [navigate]
+  );
 
-  function handleAutorization(password, email) {
-    auth
-      .authorize(password, email)
-      .then((data) => {
-        localStorage.setItem('token', data.token);
-        setEmail(email);
-        setLoggedIn(true);
-        navigate('/', { replace: true });
-      })
-      .catch((err) => console.log(err));
-  }
+  const handleAutorization = useCallback(
+    async (password, email) => {
+      try {
+        const data = await auth.authorize(password, email);
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          setLoggedIn(true);
+          setEmail(email);
+          navigate('/', { replace: true });
+        }
+      } catch (err) {
+        alert('Неверный Email или пароль.');
+      }
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     tokenCheck();
-  }, []);
+  }, [tokenCheck]);
 
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
@@ -177,10 +184,16 @@ function App() {
     }
   }
 
+  function signOut() {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+    setEmail('');
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header loggedIn={loggedIn} email={email} />
+        <Header loggedIn={loggedIn} email={email} signOut={signOut} />
         <Routes>
           <Route
             path="/sign-up"
@@ -211,9 +224,8 @@ function App() {
               />
             }
           />
-          <Route element={<Footer />}></Route>
         </Routes>
-
+        <Footer />
         <InfoTooltip
           name="infoTooltip"
           isOpen={infoTooltip}

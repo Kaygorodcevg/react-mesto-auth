@@ -1,15 +1,3 @@
-// function InfoTooltip({ isOpen, onClose, name, img, title }) {
-//   return (
-//     <PopupWithForm
-//       name={name}
-//       title={title}
-//       isOpen={isOpen}
-//       onClose={onClose}
-//       img={img}
-//     ></PopupWithForm>
-//   );
-// }
-
 function InfoTooltip({
   onClose,
   buttonText,

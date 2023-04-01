@@ -1,10 +1,20 @@
-import React from "react";
+import { useLocation } from 'react-router-dom';
 
 function Footer() {
+  const location = useLocation();
+
   return (
-    <footer className="footer">
-      <p className="footer__text">&copy; 2022 Mesto Russia</p>
-    </footer>
+    <>
+      {location.pathname === '/sign-in' ? (
+        <></>
+      ) : location.pathname === '/sign-up' ? (
+        <></>
+      ) : (
+        <footer className="footer">
+          <p className="footer__text">&copy; 2023 Mesto Russia</p>
+        </footer>
+      )}
+    </>
   );
 }
 

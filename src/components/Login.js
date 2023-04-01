@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import * as auth from './auth';
 import AuthForm from './AuthForm';
 
 function Login({ onAuth }) {

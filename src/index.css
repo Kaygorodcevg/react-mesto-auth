@@ -7,6 +7,10 @@
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);
 @import url(./blocks/header/__link/header__link.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__info-wrapper/header__info-wrapper.css);
+@import url(./blocks/header/__buttom/header__buttom.css);
+@import url(./blocks/header/__buttom/_active/header__buttom_active.css);
 
 /* profile */
 @import url(./blocks/profile/__add-button/profile__add-button.css);
@@ -50,7 +54,6 @@
 @import url(./blocks/popup/__picture/popup__picture.css);
 @import url(./blocks/popup/__zoom-wrapper/popup__zoom-wrapper.css);
 @import url(./blocks/popup/_zoom-image/popup_zoom-image.css);
-@import url(./blocks/popup/__info-tooltip/popup__info-tooltip.css);
 @import url(./blocks/popup/__title/_tooltip/popup__title_tooltip.css);
 @import url(./blocks/popup/__info-tooltip-img/popup__info-tooltip-img.css);
 @import url(./blocks/popup/__submit-button/_hidden/popup__submit-button_hidden.css);
@@ -69,3 +72,4 @@
 @import url(./blocks/popup/__submit-button/_auth/popup__submit-button_auth_disabled/popup__submit-button_auth_disabled.css);
 @import url(./blocks/authpage/__text/authpage__text.css);
 @import url(./blocks/authpage/__link/authpage__link.css);
+@import url(./blocks/popup/__form/_auth/popup__form_auth.css);
