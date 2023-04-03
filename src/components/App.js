@@ -20,16 +20,14 @@ import success from '../images/success.svg';
 import fail from '../images/fail.svg';
 
 function App() {
-  const [isEditProfilePopupOpen, setEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-  const [isConfirmPopupOpen, setConfirmPopupOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState({});
-  const [cards, setCards] = React.useState([]);
-  const [deleteCard, setDeleteCard] = React.useState({});
-
+  const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+  const [isConfirmPopupOpen, setConfirmPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  const [deleteCard, setDeleteCard] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
   const [infoTooltip, setInfoTooltip] = useState(false);
@@ -172,20 +170,23 @@ function App() {
   }, [tokenCheck]);
 
   function tokenCheck() {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      auth.getContent(jwt).then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setEmail(res.data.email);
-          navigate('/', { replace: true });
-        }
-      });
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth
+        .getContent(token)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setEmail(res.data.email);
+            navigate('/', { replace: true });
+          }
+        })
+        .catch((err) => console.log(err));
     }
   }
 
   function logout() {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     setLoggedIn(false);
     setEmail('');
   }

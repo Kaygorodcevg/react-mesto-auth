@@ -26,6 +26,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
       <img
         className="elements__image elements__image_template"
         src={card.link}
+        alt={card.name}
         onClick={handleCardClick}
       ></img>
       <div className="elements__discription">

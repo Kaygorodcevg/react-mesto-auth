@@ -1,29 +1,31 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
-  const [name, setName] = React.useState('');
-  const [link, setLink] = React.useState('');
+  const {
+    values,
+    handleChange,
+    errors,
+    isValid,
+    setValues,
+    resetForm,
+    setIsValid,
+  } = useFormAndValidation();
 
   React.useEffect(() => {
-    setName('');
-    setLink('');
-  }, [isOpen]);
-
-  function handleChangeName(e) {
-    setName(e.target.value);
-  }
-
-  function handleChangeLink(e) {
-    setLink(e.target.value);
-  }
+    resetForm();
+    setValues({});
+  }, [isOpen, resetForm, setValues]);
 
   function handleSubmit(e) {
     e.preventDefault();
     onAddPlace({
-      name: name,
-      link: link,
+      name: values.placeName,
+      link: values.placeUrl,
     });
+    resetForm();
+    setIsValid(false);
   }
 
   return (
@@ -34,34 +36,43 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       onClose={onClose}
       onSubmit={handleSubmit}
       buttonText="Создать"
+      isValid={isValid}
     >
       <div className="popup__input-wrapper">
         <input
           name="placeName"
           id="placeName-input"
           type="text"
-          className="popup__input popup__input_place_name"
+          className={`popup__input popup__input_place_name ${
+            errors.placeName && 'popup__input_error'
+          }`}
           placeholder="Название"
           minLength="2"
           maxLength="30"
           required
-          onChange={handleChangeName}
-          value={name}
+          onChange={handleChange}
+          value={values.placeName || ''}
         />
-        <span className="popup__input-error placeName-input-error"></span>
+        <span className="popup__input-error_active placeName-input-error">
+          {errors.placeName || ''}
+        </span>
       </div>
       <div className="popup__input-wrapper">
         <input
           name="placeUrl"
           id="url-input"
           type="url"
-          className="popup__input popup__input_place_url"
+          className={`popup__input popup__input_place_url ${
+            errors.placeUrl && 'popup__input_error'
+          }`}
           placeholder="Ссылка на картинку"
           required
-          onChange={handleChangeLink}
-          value={link}
+          onChange={handleChange}
+          value={values.placeUrl || ''}
         />
-        <span className="popup__input-error url-input-error"></span>
+        <span className="popup__input-error_active url-input-error">
+          {errors.placeUrl || ''}
+        </span>
       </div>
     </PopupWithForm>
   );
